@@ -1,0 +1,27 @@
+name: recasketch
+channels: !!python/tuple
+- defaults
+dependencies:
+- conda-forge::selenium=2.53.5=py35_0
+- libgfortran=3.0.0=1
+- mkl=11.3.3=0
+- numpy=1.11.1=py35_0
+- openssl=1.0.2j=0
+- pandas=0.18.1=np111py35_0
+- pip=8.1.2=py35_0
+- python=3.5.2=0
+- python-dateutil=2.5.3=py35_0
+- pytz=2016.6.1=py35_0
+- pyyaml=3.12=py35_0
+- readline=6.2=2
+- requests=2.11.1=py35_0
+- scipy=0.18.1=np111py35_0
+- setuptools=27.2.0=py35_0
+- six=1.10.0=py35_0
+- sqlite=3.13.0=0
+- tk=8.5.18=0
+- wheel=0.29.0=py35_0
+- xz=5.2.2=0
+- yaml=0.1.6=0
+- zlib=1.2.8=3
+

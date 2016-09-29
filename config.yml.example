@@ -1,0 +1,8 @@
+# Visit https://sites.google.com/a/chromium.org/chromedriver/downloads
+# to download the chromedriver binary
+chromedriver: '/home/ethan/Documents/rec-a-sketch/chromedriver'
+PARENT_CATALOG_URL: 'https://sketchfab.com/models?sort_by=-likeCount&page='
+BASE_MODEL_URL: 'https://sketchfab.com/models/'
+BASE_LIKES_URL: 'https://sketchfab.com/i/likes'
+LIKE_LIMIT: 5
+model_url_file: 'model_urls.psv'
