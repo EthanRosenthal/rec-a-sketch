@@ -181,13 +181,18 @@ def write_model_likes(filename, model_name, mid, user_set):
 
 
 def get_model_features(url):
-    BROWSER.get(url)
-    time.sleep(5)
-    cats = BROWSER.find_elements_by_xpath("//section[@class='model-meta-row categories']//ul//a")
-    cats = [cat.text for cat in cats]
+    try:
+        BROWSER.get(url)
+        time.sleep(5)
+        cats = BROWSER.find_elements_by_xpath("//section[@class='model-meta-row categories']//ul//a")
+        cats = [cat.text for cat in cats]
 
-    tags = BROWSER.find_elements_by_xpath("//section[@class='model-meta-row tags']//ul//a")
-    tags = [tag.text for tag in tags]
+        tags = BROWSER.find_elements_by_xpath("//section[@class='model-meta-row tags']//ul//a")
+        tags = [tag.text for tag in tags]
+    except:
+        print('Difficulty grabbing these features {}'.format(url))
+        print('Try again.')
+        get_model_features(url)
     return cats, tags
 
 
@@ -207,7 +212,7 @@ def crawl_model_likes(catalog, likes_filename):
             write_model_likes(likes_filename, model_name, mid, users)
 
 
-def crawl_model_features(catalog, chromedriver, features_filename):
+def crawl_model_features(catalog, chromedriver, features_filename, start=1):
     global BROWSER
     BROWSER = webdriver.Chrome(chromedriver)
     BROWSER.maximize_window()
@@ -218,10 +223,13 @@ def crawl_model_features(catalog, chromedriver, features_filename):
     fout = open(features_filename, 'a')
     writer = csv.writer(fout, delimiter='|', quotechar='\\',
                         quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(['mid', 'type', 'value'])
+    if start > 1:
+        writer.writerow(['mid', 'type', 'value'])
     ctr = 0
     for row in reader:
         ctr += 1
+        if ctr < start:
+            continue
         model_name, mid = row[0], row[1]
         url = BASE_MODEL_URL + mid
         print(', '.join(str(x) for x in [ctr, mid, model_name]))
@@ -245,6 +253,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Sketchfab Crawler')
     parser.add_argument('config', help='config file with DB and API params')
     parser.add_argument('--type', help='What\'re we gonna crawl tonight, Brain?')
+    parser.add_argument('--start', default=1, type=int,
+                        help='What row to start at')
+
     args = parser.parse_args()
 
     config = load_config(args.config)
@@ -255,4 +266,5 @@ if __name__ == "__main__":
         crawl_model_likes(config['model_url_file'], config['likes_file'])
     elif args.type == 'features':
         crawl_model_features(config['model_url_file'], config['chromedriver'],
-                         config['model_features_file'])
+                         config['model_features_file'], start=args.start)
+    # THere's an extra header row mid|type|value in this file
