@@ -6,3 +6,5 @@ BASE_MODEL_URL: 'https://sketchfab.com/models/'
 BASE_LIKES_URL: 'https://sketchfab.com/i/likes'
 LIKE_LIMIT: 5
 model_url_file: 'model_urls.psv'
+likes_file: 'model_likes.psv'
+model_features_file: 'model_feats.psv'
