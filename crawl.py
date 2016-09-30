@@ -244,7 +244,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Sketchfab Crawler')
     parser.add_argument('config', help='config file with DB and API params')
-    parser.add_argument('--type', help='What\'re we gonna crawl, Brain?')
+    parser.add_argument('--type', help='What\'re we gonna crawl tonight, Brain?')
     args = parser.parse_args()
 
     config = load_config(args.config)
