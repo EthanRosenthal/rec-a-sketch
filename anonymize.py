@@ -20,5 +20,5 @@ if __name__ == '__main__':
             for row in reader:
                 # Throw away user name
                 modelname, mid, uid = row[0], row[1], row[2]
-                uid = hmac.new(key, bytes(uid, 'utf8')).hexdigest()
+                uid = hmac.new(key, bytes(uid, 'utf-8')).hexdigest()
                 writer.writerow([modelname, mid, uid])
