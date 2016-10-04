@@ -270,4 +270,3 @@ if __name__ == "__main__":
     elif args.type == 'features':
         crawl_model_features(config['model_url_file'], config['chromedriver'],
                          config['model_features_file'], start=args.start)
-    # THere's an extra header row mid|type|value in this file
