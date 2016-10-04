@@ -79,9 +79,7 @@ def get_page_models(page):
 
 
 def collect_model_urls(fileout, chromedriver):
-    global BROWSER
-    BROWSER = webdriver.Chrome(chromedriver)
-    BROWSER.maximize_window()
+    load_browser(chromedriver)
     page = 1
     full_catalog = []
     if os.path.isfile(fileout):
