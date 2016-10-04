@@ -13,6 +13,11 @@ from selenium import webdriver
 from six.moves import input
 import yaml
 
+def load_browser(chromedriver):
+    global BROWSER
+    BROWSER = webdriver.Chrome(chromedriver)
+    BROWSER.maximize_window()
+
 def load_config(filename):
     config = yaml.load(open(filename, 'r'))
     os.environ['webdriver.chrome.driver'] = config['chromedriver']
@@ -180,7 +185,7 @@ def write_model_likes(filename, model_name, mid, user_set):
             print('\t' + '|'.join([x for x in line]))
 
 
-def get_model_features(url):
+def get_model_features(url, chromedriver):
     try:
         BROWSER.get(url)
         time.sleep(5)
@@ -191,8 +196,10 @@ def get_model_features(url):
         tags = [tag.text for tag in tags]
     except:
         print('Difficulty grabbing these features {}'.format(url))
-        print('Try again.')
-        get_model_features(url)
+        print('Reload browser and try again')
+        load_browser(chromedriver)
+        time.sleep(5)
+        cats, tags = get_model_features(url, chromedriver)
     return cats, tags
 
 
@@ -213,9 +220,7 @@ def crawl_model_likes(catalog, likes_filename):
 
 
 def crawl_model_features(catalog, chromedriver, features_filename, start=1):
-    global BROWSER
-    BROWSER = webdriver.Chrome(chromedriver)
-    BROWSER.maximize_window()
+    load_browser(chromedriver)
 
     f = open(catalog, 'r')
     reader = csv.reader(f, delimiter='|', quoting=csv.QUOTE_MINIMAL,
@@ -234,7 +239,7 @@ def crawl_model_features(catalog, chromedriver, features_filename, start=1):
         url = BASE_MODEL_URL + mid
         print(', '.join(str(x) for x in [ctr, mid, model_name]))
 
-        cats, tags = get_model_features(url)
+        cats, tags = get_model_features(url, chromedriver)
         if cats:
             for cat in cats:
                 line = [mid, 'category', cat]
