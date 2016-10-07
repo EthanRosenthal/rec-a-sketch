@@ -224,7 +224,7 @@ def crawl_model_features(catalog, chromedriver, features_filename, start=1):
     fout = open(features_filename, 'a')
     writer = csv.writer(fout, delimiter='|', quotechar='\\',
                         quoting=csv.QUOTE_MINIMAL)
-    if start > 1:
+    if start == 1:
         writer.writerow(['mid', 'type', 'value'])
     ctr = 0
     for row in reader:
