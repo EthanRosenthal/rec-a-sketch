@@ -14,11 +14,15 @@ from six.moves import input
 import yaml
 
 def load_browser(chromedriver):
+    """Start new global browser session"""
     global BROWSER
     BROWSER = webdriver.Chrome(chromedriver)
     BROWSER.maximize_window()
 
 def load_config(filename):
+    """
+    Load relevant parts of configuration file into global variables
+    """
     config = yaml.load(open(filename, 'r'))
     os.environ['webdriver.chrome.driver'] = config['chromedriver']
     global PARENT_CATALOG_URL
@@ -34,6 +38,7 @@ def load_config(filename):
 
 
 def get_item_list(default_list_len=24):
+    """For current page, grab all item elements"""
     elem = BROWSER.find_element_by_xpath("//div[@class='infinite-grid']")
     item_list = elem.find_elements_by_xpath(".//li[@class='item']")
     if len(item_list) < default_list_len:
@@ -45,6 +50,7 @@ def get_item_list(default_list_len=24):
 
 
 def get_page_models(page):
+    """For a given page number, collect urls for all models on that page"""
     # Browse all models, order by most liked
     url = PARENT_CATALOG_URL + str(page)
 
@@ -79,6 +85,7 @@ def get_page_models(page):
 
 
 def collect_model_urls(fileout, chromedriver):
+    """Loop from page to page grabbing urls to Sketchfab models"""
     load_browser(chromedriver)
     page = 1
     full_catalog = []
@@ -173,6 +180,7 @@ def get_model_likes(mid, User, count=24):
 
 
 def write_model_likes(filename, model_name, mid, user_set):
+    """Append set of model likes to filename"""
     with open(filename, 'a') as fout:
         print('Likes:')
         writer = csv.writer(fout, delimiter='|', quotechar='\\',
@@ -184,6 +192,7 @@ def write_model_likes(filename, model_name, mid, user_set):
 
 
 def get_model_features(url, chromedriver):
+    """For given model url, grab categories and tags for that model"""
     try:
         BROWSER.get(url)
         time.sleep(5)
@@ -200,6 +209,10 @@ def get_model_features(url, chromedriver):
 
 
 def crawl_model_likes(catalog, likes_filename):
+    """
+    For each model in catalog (model urls), get every user id for every user
+    that liked that model
+    """
     f = open(catalog, 'r')
     ctr = 0
     # I've been reading Fluent Python and was inspired to create namedtuples.
@@ -216,6 +229,10 @@ def crawl_model_likes(catalog, likes_filename):
 
 
 def crawl_model_features(catalog, chromedriver, features_filename, start=1):
+    """
+    For each model in catalog (model urls), get categories and tags for that
+    model
+    """
     load_browser(chromedriver)
 
     fin = open(catalog, 'r')
