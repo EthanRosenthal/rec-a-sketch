@@ -195,9 +195,7 @@ def get_model_features(url, chromedriver):
     except:
         print('Difficulty grabbing these features {}'.format(url))
         print('Reload browser and try again')
-        load_browser(chromedriver)
-        time.sleep(5)
-        cats, tags = get_model_features(url, chromedriver)
+        cats, tags = None, None
     return cats, tags
 
 
@@ -220,8 +218,8 @@ def crawl_model_likes(catalog, likes_filename):
 def crawl_model_features(catalog, chromedriver, features_filename, start=1):
     load_browser(chromedriver)
 
-    f = open(catalog, 'r')
-    reader = csv.reader(f, delimiter='|', quoting=csv.QUOTE_MINIMAL,
+    fin = open(catalog, 'r')
+    reader = csv.reader(fin, delimiter='|', quoting=csv.QUOTE_MINIMAL,
                         quotechar='\\')
     fout = open(features_filename, 'a')
     writer = csv.writer(fout, delimiter='|', quotechar='\\',
@@ -238,6 +236,14 @@ def crawl_model_features(catalog, chromedriver, features_filename, start=1):
         print(', '.join(str(x) for x in [ctr, mid, model_name]))
 
         cats, tags = get_model_features(url, chromedriver)
+        if cats is None and tags is None:
+            load_browser(chromedriver)
+            time.sleep(5)
+            cats, tags = get_model_features(url, chromedriver)
+            if cats is None and tags is None:
+                print('Cant fix it! break')
+                break
+
         if cats:
             for cat in cats:
                 line = [mid, 'category', cat]
