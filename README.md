@@ -13,6 +13,7 @@ Use this script to crawl the Sketchfab site and collect data. Currently supports
 * urls - Grab the url of every sketchfab model with number of likes >= ```LIKE_LIMIT``` as defined in the ```config```.
 * likes - Given collected model urls, collect users who have liked those models.
 * features - Given collected model urls, collect categories and tags associated with those models.
+* thumbs - Given collected model urls, collect 200x200 pixel thumbnails of each model.
 
 Run like
 ```bash
