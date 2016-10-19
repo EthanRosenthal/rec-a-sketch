@@ -3,12 +3,16 @@ Functions for crawling Sketchfab to grab model names, likes, or tags.
 """
 
 import argparse
-import csv
+from concurrent.futures import ProcessPoolExecutor
+import concurrent.futures
 from collections import namedtuple
+import csv
 import os
-import time
-
 import requests
+import time
+import urllib
+
+import pandas as pd
 from selenium import webdriver
 from six.moves import input
 import yaml
@@ -31,8 +35,12 @@ def load_config(filename):
     BASE_MODEL_URL = config['BASE_MODEL_URL']
     global BASE_LIKES_URL
     BASE_LIKES_URL = config['BASE_LIKES_URL']
+    global BASE_THUMBS_URL
+    BASE_THUMBS_URL = config['BASE_THUMBS_URL']
     global LIKE_LIMIT
     LIKE_LIMIT = config['LIKE_LIMIT']
+    global MAX_WORKERS
+    MAX_WORKERS = config['MAX_WORKERS']
 
     return config
 
@@ -207,6 +215,55 @@ def get_model_features(url, chromedriver):
         cats, tags = None, None
     return cats, tags
 
+def single_thumb(mid, thumbs_dir, thumbs_suffix):
+    time.sleep(.2)
+    try:
+        response = requests.get(BASE_THUMBS_URL + mid).json()
+        thumb = [x['url'] for x in response['thumbnails']['images']
+                 if x['width'] == 200 and x['height']==200]
+        path = os.path.join(thumbs_dir, '{}_{}'.format(mid, thumbs_suffix))
+        fname, _ = urllib.request.urlretrieve(thumb[0], path)
+        status= True
+    except:
+        status = False
+    return {'mid': mid, 'status': status}
+
+def get_model_thumbs(urls, thumbs_dir, thumbs_suffix):
+    """Get 200 pixel thumbnails for a list of mids"""
+    df = pd.read_csv(urls, delimiter='|', quotechar='\\',
+                     quoting=csv.QUOTE_MINIMAL)
+    mids = df['mid'].unique().tolist()
+    ctr = 0
+    total = len(mids)
+    t0 = time.time()
+
+    with ProcessPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        future_results = {executor.submit(single_thumb, mid, thumbs_dir, thumbs_suffix): mid for mid in mids}
+
+        results = []
+        for future in concurrent.futures.as_completed(future_results):
+            ctr += 1
+            if ctr % 100 == 0:
+                t1 = time.time()
+                print('Collection mid {}/{}'.format(ctr, total))
+                print('Took {} seconds/model'.format((t1-t0)/100))
+                print('Roughly {} minutes left'.format((t1-t0)/100/60 * (total - ctr)))
+                t0 = time.time()
+            results.append(future.result())
+
+    print('Failed mids')
+    failed = []
+    for r in results:
+        if not r['status']:
+            print(r['mid'])
+            failed.append(r['mid'])
+
+    with open('failed_mids.psv', 'w') as fout:
+        writer = csv.writer(fout)
+        writer.writerow('mid')
+        for failure in failed:
+            writer.writerow(failure)
+
 
 def crawl_model_likes(catalog, likes_filename):
     """
@@ -219,6 +276,7 @@ def crawl_model_likes(catalog, likes_filename):
     User = namedtuple('User', ['uid', 'name'])
     reader = csv.reader(f, delimiter='|', quoting=csv.QUOTE_MINIMAL,
                         quotechar='\\')
+    reader.readrow();
     for row in reader:
         ctr += 1
         model_name, mid = row[0], row[1]
@@ -274,6 +332,10 @@ def crawl_model_features(catalog, chromedriver, features_filename, start=1):
     fin.close()
     fout.close()
 
+def prepend_path(path, filename):
+    return os.path.join(path, filename)
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Sketchfab Crawler')
@@ -285,11 +347,19 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     config = load_config(args.config)
+    data_path = config['data_dir']
+    data_files = {k: prepend_path(data_path, v)
+                  for (k, v) in config['data_files'].items()}
+
 
     if args.type == 'urls':
-        collect_model_urls(config['model_url_file'], config['chromedriver'])
+        collect_model_urls(data_files['model_url_file'], config['chromedriver'])
     elif args.type == 'likes':
-        crawl_model_likes(config['model_url_file'], config['likes_file'])
+        crawl_model_likes(data_files['model_url_file'], data_files['likes_file'])
     elif args.type == 'features':
-        crawl_model_features(config['model_url_file'], config['chromedriver'],
-                         config['model_features_file'], start=args.start)
+        crawl_model_features(data_files['model_url_file'], config['chromedriver'],
+                         data_files['model_features_file'], start=args.start)
+    elif args.type == 'thumbs':
+        thumbs_dir = prepend_path(data_path, config['thumbs_dir'])
+        failed = get_model_thumbs(data_files['model_url_file'],
+                                  thumbs_dir, config['thumbs_suffix'])
