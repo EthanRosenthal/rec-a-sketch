@@ -3,8 +3,16 @@
 chromedriver: '/home/ethan/Documents/rec-a-sketch/chromedriver'
 PARENT_CATALOG_URL: 'https://sketchfab.com/models?sort_by=-likeCount&page='
 BASE_MODEL_URL: 'https://sketchfab.com/models/'
+BASE_THUMBS_URL: 'https://sketchfab.com/i/models/'
 BASE_LIKES_URL: 'https://sketchfab.com/i/likes'
 LIKE_LIMIT: 5
-model_url_file: 'model_urls.psv'
-likes_file: 'model_likes.psv'
-model_features_file: 'model_feats.psv'
+MAX_WORKERS: 4
+
+data_dir: 'data'
+data_files:
+  model_url_file: 'model_urls.psv'
+  likes_file: 'model_likes.psv'
+  model_features_file: 'model_feats.psv'
+
+thumbs_dir: 'model_thumbs'
+thumbs_suffix: 'thumb200.jpg'
