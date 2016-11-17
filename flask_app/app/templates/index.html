@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Rec-a-Sketch</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+    <!-- Bootstrap -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Slick -->
+    <link rel="stylesheet" type="text/css" href="../static/slick/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/slick/slick/slick-theme.css"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+      body {
+          font-family: Helvetica;
+          }
+      @media(max-width: 480px) {
+        h2 {
+          font-size: 14pt;
+        }
+        h3 {
+          font-size: 12pt;
+        }
+      }
+      .scrollable-menu {
+        height: auto;
+        max-height: 300px;
+        overflow-x: hidden;
+      }
+      .padall {
+        padding-left: 30px;
+        padding-bottom: 10px;
+        padding-right: 30px;
+      }
+      .btn{
+        min-width: 220px;
+      }
+      /* Overwrite some Slick */
+      .slick-prev:before,
+      .slick-next:before{
+        color: black;
+      }
+    </style>
+
+  </head>
+
+    <body>
+      <div class="container-fluid" style="background:#000000 !important;font-style: bulo-bold;">
+        <div class="media">
+          <span class="media-left" style="color:#FFFFFF;">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" style="width:100px;padding:0px;margin:0px;"  />
+          </span>
+          <div class="media-body">
+            <h1><a href="/index" style="color:#FFFFFF;">Rec-a-Sketch</a></h1>
+          </div>
+        </div>
+      </div>
+      <div class="padall">
+        <h3>Discover similar <a href="https://sketchfab.com">Sketchfab</a> models</h3>
+
+        <form action="/index" method="GET">
+          <div class="dropdown dropdown-submit-input">
+            <input type="hidden" name="mid" />
+            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {% if mid_data %}
+                {{ mid_data['name'] }}
+              {% else %}
+                Click to select a Sketchfab model
+              {% endif %}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+              {% for m in mid_and_name %}
+                <li><a href="#" data-value="{{ m['mid'] }}">{{ m['model_name'] }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </form>
+
+        {% if mid_data %}
+          <h2>Selected Model</h2>
+          <a href="{{ mid_data['url'] }}" target="_blank">
+            <img src = "{{ mid_data['thumbnail'] }}">
+            <p>{{ mid_data['name'] }}</p>
+          </a>
+        {% endif %}
+
+        {% if rec_data %}
+          <h2>Visually Similar Models</h2>
+          <div class="slick-recs">
+            {% if rec_data['tl'] %}
+              {% for rec in rec_data['tl'] %}
+                <div>
+                  <a href="{{ url_for('index',mid=rec['mid']) }}">
+                    <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
+                  </a>
+                  <a href="{{ rec['url'] }}" target="_blank">
+                    <p>{{ rec['name'] }}</p>
+                  </a>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <h2>Users Who Liked This Model Also Liked</h2>
+          <div class="slick-recs">
+            {% if rec_data['wrmf'] %}
+              {% for rec in rec_data['wrmf'] %}
+                <div>
+                  <a href="{{ url_for('index',mid=rec['mid']) }}">
+                    <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
+                  </a>
+                  <a href="{{ rec['url'] }}" target="_blank">
+                    <p>{{ rec['name'] }}</p>
+                  </a>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          <h2>Likes + Tags</h2>
+          <div class="slick-recs">
+            {% if rec_data['l2r'] %}
+              {% for rec in rec_data['l2r'] %}
+                <div>
+                  <a href="{{ url_for('index',mid=rec['mid']) }}">
+                    <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
+                  </a>
+                  <a href="{{ rec['url'] }}" target="_blank">
+                    <p>{{ rec['name'] }}</p>
+                  </a>
+                  </a>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+    <!-- Slick -->
+    <script type="text/javascript" src="../static/slick/slick/slick.min.js"></script>
+
+    <script>
+    (function($) {
+      $('.dropdown-submit-input .dropdown-menu a').click(function (e) {
+        e.preventDefault();
+        $(this).closest('.dropdown-submit-input').find('input').val($(this).data('value'));
+        $(this).closest('form').submit();
+      });
+    })(jQuery);
+    </script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('.slick-recs').slick({
+          infinite: true,
+          slidesToShow: 4,
+          slidesToScroll: 4,
+          dots: true,
+          responsive: [
+            {
+              breakpoint: 920,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: true
+              }
+            },
+            {
+              breakpoint: 680,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                dots: false
+              }
+            },
+            {
+              breakpoint: 400,
+              settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                dots: false
+              }
+            }
+          ]
+        });
+      });
+    </script>
+
+
+  </body>
+</html>
