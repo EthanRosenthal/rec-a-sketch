@@ -14,5 +14,15 @@ data_files:
   likes_file: 'model_likes.psv'
   model_features_file: 'model_feats.psv'
 
+db_dir: 'db'
+db_files:
+  recs:
+    tl: 'recs_tl.csv'
+    wrmf: 'recs_wrmf.csv'
+    l2r: 'recs_l2r.csv'
+  mid_data_file: 'mid_data.csv'
+  sqlite_file: 'recasketch.sqlite'
+  mid_names_file: 'model_names.psv'
+
 thumbs_dir: 'model_thumbs'
 thumbs_suffix: 'thumb200.jpg'
