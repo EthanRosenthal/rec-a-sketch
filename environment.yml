@@ -2,12 +2,19 @@ name: recasketch
 channels: !!python/tuple
 - defaults
 dependencies:
+- click=6.6=py35_0
 - conda-forge::selenium=2.53.5=py35_0
+- flask=0.11.1=py35_0
+- gunicorn=19.1.0=py35_0
+- itsdangerous=0.24=py35_0
+- jinja2=2.8=py35_1
 - libgfortran=3.0.0=1
+- markupsafe=0.23=py35_2
 - mkl=11.3.3=0
 - numpy=1.11.1=py35_0
 - openssl=1.0.2j=0
 - pandas=0.18.1=np111py35_0
+- pastedeploy=1.5.2=py35_1
 - pip=8.1.2=py35_0
 - python=3.5.2=0
 - python-dateutil=2.5.3=py35_0
@@ -20,8 +27,10 @@ dependencies:
 - six=1.10.0=py35_0
 - sqlite=3.13.0=0
 - tk=8.5.18=0
+- werkzeug=0.11.11=py35_0
 - wheel=0.29.0=py35_0
 - xz=5.2.2=0
 - yaml=0.1.6=0
 - zlib=1.2.8=3
+prefix: /home/ethan/anaconda3/envs/recasketch
 
