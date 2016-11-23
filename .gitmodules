@@ -1,0 +1,3 @@
+[submodule "flask_app/app/static/slick"]
+	path = flask_app/app/static/slick
+	url = git@github.com:kenwheeler/slick.git
