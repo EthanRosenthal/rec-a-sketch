@@ -24,6 +24,7 @@
     <style>
       body {
           font-family: Helvetica;
+          background: #eaeaed;
           }
       @media(max-width: 480px) {
         h2 {
@@ -42,8 +43,11 @@
         padding-left: 30px;
         padding-bottom: 10px;
         padding-right: 30px;
+        max-width: 900px;
+        display: block;
+        margin: auto;
       }
-      .btn{
+      .drop-btn{
         min-width: 220px;
       }
       /* Overwrite some Slick */
@@ -56,7 +60,7 @@
   </head>
 
     <body>
-      <div class="container-fluid" style="background:#000000 !important;font-style: bulo-bold;">
+      <div class="container-fluid" style="background:#506368 !important;font-style: bulo-bold;">
         <div class="media">
           <span class="media-left" style="color:#FFFFFF;">
             <img src="{{ url_for('static', filename='img/logo.png') }}" style="width:100px;padding:0px;margin:0px;"  />
@@ -69,30 +73,53 @@
       <div class="padall">
         <h3>Discover similar <a href="https://sketchfab.com">Sketchfab</a> models</h3>
 
-        <form action="/index" method="GET">
-          <div class="dropdown dropdown-submit-input">
-            <input type="hidden" name="mid" />
-            <button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {% if mid_data %}
-                {{ mid_data['name'] }}
-              {% else %}
-                Click to select a Sketchfab model
-              {% endif %}
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
-              {% for m in mid_and_name %}
-                <li><a href="#" data-value="{{ m['mid'] }}">{{ m['model_name'] }}</a></li>
-              {% endfor %}
-            </ul>
+        <div class="row">
+          <div class="form-group col-lg-8">
+            <form action="/index" method="GET">
+              <div class="dropdown dropdown-submit-input">
+                <input type="hidden" name="mid" />
+                <button class="btn btn-default dropdown-toggle drop-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                  {% if mid_data %}
+                    {{ mid_data['name'] }}
+                  {% else %}
+                    Click to select a Sketchfab model
+                  {% endif %}
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+                  {% for m in mid_and_name %}
+                    <li><a href="#" data-value="{{ m['mid'] }}">{{ m['model_name'] }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </form>
           </div>
-        </form>
+          <div class="col-lg-8">
+          <p>Or</p>
+          </div>
+          <div class="form-group col-lg-8">
+            <form action="/index" method="GET">
+              <div class="input-group">
+                <input type="text" class="form-control" name="link" placeholder="Paste link to model">
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit">Go!</button>
+                </span>
+              </div>  
+            </form>
+          </div>
+        </div>
+
+        {% if not_found %}
+        <h2>Ruh roh, there are no recommendations for that model</h2>
+        {% endif %}
 
         {% if mid_data %}
           <h2>Selected Model</h2>
-          <a href="{{ mid_data['url'] }}" target="_blank">
+          <a href="{{ url_for('index',mid=mid_data['mid']) }}">
             <img src = "{{ mid_data['thumbnail'] }}">
-            <p>{{ mid_data['name'] }}</p>
+            <a href="{{ mid_data['url'] }}" target="_blank">
+              <p>{{ mid_data['name'] }}</p>
+            </a>
           </a>
         {% endif %}
 
