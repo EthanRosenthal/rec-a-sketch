@@ -77,28 +77,58 @@ def get_mid_names(conn):
     # to make a DictCursor. Do by hand.
     return [{'mid': r[0], 'model_name': r[1]} for r in results]
 
+def parse_mid(request):
+    """
+    Go through funky series of scenarios parsing out the mid
+    from the GET request.
+    """
+    mid = request.args.get('mid')
+    if mid is not None:
+        return mid
+
+    link = request.args.get('link')
+    if link is None or not link:
+        return None
+
+    splits = link.split('/')
+    mid = splits[-1]
+
+    if splits[-2] != 'models':
+        # Link is in funny format. Nothing we can do!
+        return None
+
+    return mid
+
+
 
 @app.route('/')
 @app.route('/index')
 def index():
     conn = sqlite3.connect(app.config['DATABASE'])
     mid_names = get_mid_names(conn)
+    mid = parse_mid(request)
+
     try:
-        mid = request.args.get('mid')
         mid_data = get_mid_data([mid], conn)[0]
         recs = get_recommendations(mid, conn)
         rec_data = {k: None for k in recs.keys()}
         for (k, v) in recs.items():
             rec_data[k] = get_mid_data(v, conn)
+        not_found = False
     except:
         mid = None
         mid_data = None
         rec_data = None
+        not_found = True
+
+    if not request.args:
+        not_found = False
 
     return render_template("index.html",
         title='Rec-a-Sketch',
         mid=mid,
         mid_data=mid_data,
         rec_data=rec_data,
-        mid_and_name=mid_names
+        mid_and_name=mid_names,
+        not_found=not_found
     )
