@@ -111,9 +111,11 @@ def index():
     try:
         mid_data = get_mid_data([mid], conn)[0]
         recs = get_recommendations(mid, conn)
-        rec_data = {k: None for k in recs.keys()}
+        rec_data = {}
         for (k, v) in recs.items():
-            rec_data[k] = get_mid_data(v, conn)
+            this_data = get_mid_data(v, conn)
+            if this_data:
+                rec_data[k] = this_data
         not_found = False
     except:
         mid = None
