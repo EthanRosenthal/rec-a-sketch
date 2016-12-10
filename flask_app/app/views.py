@@ -134,3 +134,7 @@ def index():
         mid_and_name=mid_names,
         not_found=not_found
     )
+
+@app.route('/about')
+def about():
+    return render_template("about.html")
