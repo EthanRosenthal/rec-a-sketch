@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Rec-a-Sketch</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+    <!-- Bootstrap -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Slick -->
+    <link rel="stylesheet" type="text/css" href="../static/slick/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="../static/slick/slick/slick-theme.css"/>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+      body {
+          font-family: Helvetica;
+          background: #eaeaed;
+          }
+      @media(max-width: 480px) {
+        h2 {
+          font-size: 14pt;
+        }
+        h3 {
+          font-size: 12pt;
+        }
+      }
+      .scrollable-menu {
+        height: auto;
+        max-height: 300px;
+        overflow-x: hidden;
+      }
+      .padall {
+        padding-left: 30px;
+        padding-bottom: 10px;
+        padding-right: 30px;
+        max-width: 900px;
+        display: block;
+        margin: auto;
+      }
+      .drop-btn{
+        min-width: 220px;
+      }
+      /* Overwrite some Slick */
+      .slick-prev:before,
+      .slick-next:before{
+        color: black;
+      }
+    </style>
+
+  </head>
+
+    <body>
+      <div class="container-fluid" style="background:#506368 !important;font-style: bulo-bold;">
+        <div class="media">
+          <span class="media-left" style="color:#FFFFFF;">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" style="width:100px;padding:0px;margin:0px;"  />
+          </span>
+          <div class="media-body">
+            <h1><a href="/index" style="color:#FFFFFF;">Rec-a-Sketch</a></h1>
+          </div>
+        </div>
+      </div>
+      <div class="padall">
+
+        <div class="row">
+          <h3>About</h3>
+          <p>
+            Rec-a-Sketch was created by <a href="http://blog.ethanrosenthal.com" target="_blank">Ethan Rosenthal</a> and is an interactive website to help people discover content on Sketchfab.
+            There are 3 types of recommendation algorithms that recommend other models to view based on their similarity to the input model.
+            The following blog posts outline how each algorithm works:
+          </p>
+          <ul>
+            <li><a href="http://blog.ethanrosenthal.com/2016/12/05/recasketch-keras/" target="_blank">Visually Similar Models</a></li>
+            <li><a href="http://blog.ethanrosenthal.com/2016/10/19/implicit-mf-part-1/" target="_blank">Users Who Liked This Model Also Liked</a></li>
+            <li><a href="http://blog.ethanrosenthal.com/2016/11/07/implicit-mf-part-2/" target="_blank">Likes + Tags</a></li>
+          </ul>
+          <p>
+            Clicking on the images of the recommended models takes you to new recommendations. Clicking on the text under the model links out to their Sketchfab page.
+          </p>
+          <p>
+            For information on how the data was collected, see this blog <a href="http://blog.ethanrosenthal.com/2016/10/09/likes-out-guerilla-dataset/" target="_blank">post</a>.
+          </p>
+          <p>
+            To see the code behind this website and the data collection, check out this github <a href="https://github.com/EthanRosenthal/rec-a-sketch" target="_blank">repo</a>.
+          </p>
+        </div>
+      </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../static/js/bootstrap.min.js"></script>
+
+
+    <!--Google Analytics  -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-54232305-2', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+
+  </body>
+</html>
