@@ -7,7 +7,7 @@ import sqlite3
 def get_mid_data(mids, conn):
     """Get info on a list of mids"""
     c = conn.cursor()
-    mids = ','.join("'{}'".format(x) for x in mids)
+    midlist = ','.join("'{}'".format(x) for x in mids)
     sql = """
         SELECT
           mid,
@@ -18,14 +18,16 @@ def get_mid_data(mids, conn):
         WHERE
           mid IN ({})
           AND thumbnail IS NOT NULL
-    """.format(mids)
+    """.format(midlist)
     c.execute(sql)
     conn.commit()
     results = c.fetchall()
     c.close()
     if results:
+        ordering = {mid: i for (i, mid) in enumerate(mids)}
         columns = ['mid', 'name', 'thumbnail', 'url']
         mid_data = [{c: v for c, v in zip(columns, r)} for r in results]
+        mid_data = sorted(mid_data, key=lambda x: ordering.get(x['mid'], 1000))
     else:
         mid_data = []
     return mid_data
