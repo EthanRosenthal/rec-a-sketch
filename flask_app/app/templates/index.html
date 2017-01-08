@@ -26,7 +26,7 @@
           font-family: Helvetica;
           background: #eaeaed;
           margin-bottom: 60px;
-          }
+      }
       @media(max-width: 480px) {
         h2 {
           font-size: 14pt;
@@ -48,12 +48,12 @@
         display: block;
         margin: auto;
       }
-      .drop-btn{
+      .drop-btn {
         min-width: 220px;
       }
       /* Overwrite some Slick */
       .slick-prev:before,
-      .slick-next:before{
+      .slick-next:before {
         color: black;
       }
       .footer {
@@ -124,62 +124,62 @@
         {% endif %}
 
         {% if mid_data %}
-          <h2>Selected Model</h2>
-          <a href="{{ url_for('index',mid=mid_data['mid']) }}">
-            <img src = "{{ mid_data['thumbnail'] }}">
-            <a href="{{ mid_data['url'] }}" target="_blank">
-              <p>{{ mid_data['name'] }}</p>
-            </a>
+        <h2>Selected Model</h2>
+        <a href="{{ url_for('index',mid=mid_data['mid']) }}">
+          <img src = "{{ mid_data['thumbnail'] }}">
+          <a href="{{ mid_data['url'] }}" target="_blank">
+            <p>{{ mid_data['name'] }}</p>
           </a>
+        </a>
         {% endif %}
 
         {% if rec_data %}
-          <h2>Visually Similar Models</h2>
-          <div class="slick-recs">
-            {% if rec_data['tl'] %}
-              {% for rec in rec_data['tl'] %}
-                <div>
-                  <a href="{{ url_for('index',mid=rec['mid']) }}">
-                    <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
-                  </a>
-                  <a href="{{ rec['url'] }}" target="_blank">
-                    <p>{{ rec['name'] }}</p>
-                  </a>
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
-          <h2>Users Who Liked This Model Also Liked</h2>
-          <div class="slick-recs">
-            {% if rec_data['wrmf'] %}
-              {% for rec in rec_data['wrmf'] %}
-                <div>
-                  <a href="{{ url_for('index',mid=rec['mid']) }}">
-                    <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
-                  </a>
-                  <a href="{{ rec['url'] }}" target="_blank">
-                    <p>{{ rec['name'] }}</p>
-                  </a>
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
-          <h2>Likes + Tags</h2>
-          <div class="slick-recs">
-            {% if rec_data['l2r'] %}
-              {% for rec in rec_data['l2r'] %}
-                <div>
-                  <a href="{{ url_for('index',mid=rec['mid']) }}">
-                    <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
-                  </a>
-                  <a href="{{ rec['url'] }}" target="_blank">
-                    <p>{{ rec['name'] }}</p>
-                  </a>
-                  </a>
-                </div>
-              {% endfor %}
-            {% endif %}
-          </div>
+        <h2>Visually Similar Models</h2>
+        <div class="slick-recs">
+        {% if rec_data['tl'] %}
+        {% for rec in rec_data['tl'] %}
+        <div>
+          <a href="{{ url_for('index',mid=rec['mid']) }}">
+            <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
+          </a>
+          <a href="{{ rec['url'] }}" target="_blank">
+            <p>{{ rec['name'] }}</p>
+          </a>
+        </div>
+        {% endfor %}
+        {% endif %}
+        </div>
+        <h2>Users Who Liked This Model Also Liked</h2>
+        <div class="slick-recs">
+        {% if rec_data['wrmf'] %}
+        {% for rec in rec_data['wrmf'] %}
+        <div>
+          <a href="{{ url_for('index',mid=rec['mid']) }}">
+            <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
+          </a>
+          <a href="{{ rec['url'] }}" target="_blank">
+            <p>{{ rec['name'] }}</p>
+          </a>
+        </div>
+        {% endfor %}
+        {% endif %}
+        </div>
+        <h2>Likes + Tags</h2>
+        <div class="slick-recs">
+        {% if rec_data['l2r'] %}
+        {% for rec in rec_data['l2r'] %}
+        <div>
+          <a href="{{ url_for('index',mid=rec['mid']) }}">
+            <img class="img-responsive" src = "{{ rec['thumbnail'] }}">
+          </a>
+          <a href="{{ rec['url'] }}" target="_blank">
+            <p>{{ rec['name'] }}</p>
+          </a>
+          </a>
+        </div>
+        {% endfor %}
+        {% endif %}
+        </div>
         {% endif %}
 
       </div>
