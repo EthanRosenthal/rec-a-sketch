@@ -1,3 +1,4 @@
+"""Taken from this project: https://github.com/damyanbogoev/flask-bookshelf"""
 import logging
 import os
 
