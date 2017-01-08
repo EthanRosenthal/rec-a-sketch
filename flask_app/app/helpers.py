@@ -92,7 +92,8 @@ def get_mid_names(conn):
     # Don't feel like implementing
     # http://stackoverflow.com/questions/3300464/how-can-i-get-dict-from-sqlite-query
     # to make a DictCursor. Do by hand.
-    return [{'mid': r[0], 'model_name': r[1]} for r in results]
+    return [{'mid': r[0], 'model_name': r[1]}
+            for r in sorted(results, lambda x: x[1])]
 
 
 def parse_mid(request):
