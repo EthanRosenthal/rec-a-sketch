@@ -1,0 +1,3 @@
+DATABASE=''
+TESTING=False
+DEBUG=False
