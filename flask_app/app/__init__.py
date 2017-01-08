@@ -1,12 +1,14 @@
-import sqlite3
-from flask import Flask, request, session, g, redirect, url_for, \
-     abort, render_template, flash
+from flask import Flask
 
-DATABASE = './app/db/recasketch.sqlite'
+from .config import configure_app
+from .helpers import get_instance_folder_path
 
-def connect_db():
-    return sqlite3.connect(app.config['DATABASE'])
 
-app = Flask(__name__)
-app.config.from_object(__name__)
+app = Flask(__name__,
+            instance_path=get_instance_folder_path(),
+            instance_relative_config=True,
+            template_folder='templates')
+
+configure_app(app)
+
 from app import views
